@@ -1,0 +1,8 @@
+# Ambiente virtual
+/.venv
+.idea
+
+# Cache e logs
+__pycache__/
+*.pyc
+*.log

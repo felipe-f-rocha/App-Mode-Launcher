@@ -1,0 +1,14 @@
+{
+  "apps": {
+    "coding": ["PY_CHARM_PATH",
+                 "VS_CODE_PATH",
+                 "BROWSER_PATH",
+                 "GITHUB_DESKTOP_PATH"
+
+    ],
+    "designing": ["BROWSER_PATH",
+                "CANVA_PATH"
+    ]
+    }
+}
+
