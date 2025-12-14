@@ -6,6 +6,11 @@
                  "GITHUB_DESKTOP_PATH"
 
     ],
+    "talking": {
+      "aumid": ""
+    }
+
+    ,
     "designing": ["BROWSER_PATH",
                 "CANVA_PATH"
     ]
