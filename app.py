@@ -2,9 +2,19 @@ import subprocess
 import customtkinter
 import json
 from PIL import Image
+import sys
 
-with open("config.json","r") as f:
-    config = json.load(f)
+try:
+    with open("config.json", "r", encoding="utf-8") as f:
+        config = json.load(f)
+
+except FileNotFoundError:
+    print("❌ config.json não encontrado")
+    sys.exit()
+
+except json.JSONDecodeError:
+    print("❌ Erro ao ler o config.json (JSON inválido)")
+    sys.exit()
 
 ICONS = {
     "coding": customtkinter.CTkImage(
@@ -30,9 +40,13 @@ def talking():
     """Abre aplicativos para conversa"""
     # aumid - nome do identificador de aplicativos da Microsoft Store
 
-    aumid = "Substitua pelo AUMID do WhatsApp"
+    aumid = config["apps"]["talking"]["aumid"]
 
     # Busca o app na pasta virtual "app folder" para abrir o aplicativo que não é .exe
+    if not aumid:
+        print("AUMID não configurado")
+        sys.exit()
+
     subprocess.Popen(["explorer.exe",f"shell:appsFolder\\{aumid}"])
 
     app.destroy()
