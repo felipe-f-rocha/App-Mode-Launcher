@@ -44,8 +44,8 @@ def talking():
 
     # Busca o app na pasta virtual "app folder" para abrir o aplicativo que não é .exe
     if not aumid:
-        print("AUMID não configurado")
-        sys.exit()
+        msg.showerror("Erro", "AUMID não configurado")
+        return
 
     subprocess.Popen(["explorer.exe",f"shell:appsFolder\\{aumid}"])
 
@@ -86,7 +86,9 @@ label.grid(row=0, column=0, columnspan=3, pady=(0, 20))
 
 btn_aspectos = {
     "text_color": "white",
-    "fg_color": "black",
+    "fg_color": "#1f1f1f",
+    "hover_color": "#333333",
+    "corner_radius": 12,
     "font": ("JetBrains Mono ExtraBold", 20)
 }
 
