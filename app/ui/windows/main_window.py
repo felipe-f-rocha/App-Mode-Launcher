@@ -1,5 +1,5 @@
 import customtkinter
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from pathlib import Path
 from typing import Dict, Any, List
 from threading import Thread
@@ -137,6 +137,7 @@ class MainWindow(customtkinter.CTk):
         info_frame = customtkinter.CTkFrame(menu_frame, corner_radius=15)
         info_frame.grid(row=1, column=0, sticky="ew", pady=(0, 12))
         info_frame.grid_columnconfigure(0, weight=1)
+        info_frame.grid_columnconfigure(1, weight=0)
 
         self.detect_button = customtkinter.CTkButton(
             info_frame,
@@ -145,6 +146,14 @@ class MainWindow(customtkinter.CTk):
             width=220,
         )
         self.detect_button.grid(row=0, column=0, padx=12, pady=12, sticky="w")
+
+        self.create_button = customtkinter.CTkButton(
+            info_frame,
+            text="Create workspace",
+            command=self.open_workspace_creator,
+            width=180,
+        )
+        self.create_button.grid(row=0, column=1, padx=12, pady=12, sticky="e")
 
         self.detected_label = customtkinter.CTkLabel(
             info_frame,
@@ -251,6 +260,46 @@ class MainWindow(customtkinter.CTk):
         self.search_entry.delete(0, "end")
         self.filtered_workspaces = self.workspaces
         self._rebuild_workspace_buttons()
+
+    def open_workspace_creator(self) -> None:
+        """Open a simple dialog to create a new workspace."""
+        workspace_name = simpledialog.askstring(
+            "Create Workspace", "Workspace name:", parent=self
+        )
+        if not workspace_name:
+            return
+
+        apps_input = simpledialog.askstring(
+            "Create Workspace",
+            "App commands or paths (comma-separated):",
+            parent=self,
+        )
+        if apps_input is None:
+            return
+
+        apps = [app.strip() for app in apps_input.split(",") if app.strip()]
+        if not apps:
+            messagebox.showwarning(
+                "Invalid Workspace",
+                "Please enter at least one app command to create a workspace.",
+            )
+            return
+
+        new_workspace = {
+            "name": workspace_name.strip(),
+            "type": "apps",
+            "apps": apps,
+            "description": "User-created workspace.",
+        }
+
+        self.config_data.setdefault("workspaces", []).append(new_workspace)
+        save_profiles(self.config_data)
+        self.workspaces = get_workspaces(self.config_data)
+        self.filtered_workspaces = self.workspaces
+        self._rebuild_workspace_buttons()
+        self._set_status_message(
+            f'✓ Workspace "{workspace_name}" created successfully.', "success"
+        )
 
     def _rebuild_workspace_buttons(self) -> None:
         """Rebuild workspace buttons based on filtered list."""
