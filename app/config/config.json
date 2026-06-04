@@ -5,7 +5,7 @@
       "auto_launch": false,
       "workspace_name": "",
       "resume_last_workspace": false,
-      "last_workspace": "a"
+      "last_workspace": ""
     }
   },
   "apps": {
@@ -43,14 +43,6 @@
       "type": "talking",
       "aumid": "PUT_YOUR_TALKING_APP_AUMID_HERE",
       "description": "Launches the talking app using AUMID from the Microsoft Store."
-    },
-    {
-      "name": "a",
-      "type": "apps",
-      "apps": [
-        "PyCharm"
-      ],
-      "description": "User-created workspace."
     }
   ]
 }

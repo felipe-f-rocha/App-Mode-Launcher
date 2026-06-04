@@ -1,8 +1,10 @@
+import json
 import platform
 import shutil
 import subprocess
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Any, Dict, List, Optional, Tuple
 
 from app.core.logger import logger
 
@@ -59,10 +61,55 @@ def get_os() -> str:
     return platform.system()
 
 
+CACHE_PATH = Path(__file__).resolve().parents[1] / "config" / "detection_cache.json"
+CACHE_TTL = timedelta(hours=6)
+
+
 def _normalize_candidate(candidate: str) -> str:
     if "{home}" in candidate:
         candidate = candidate.replace("{home}", str(Path.home()))
     return candidate
+
+
+def _load_detection_cache() -> Dict[str, Any]:
+    if not CACHE_PATH.exists():
+        return {}
+
+    try:
+        with open(CACHE_PATH, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except Exception as exc:
+        logger.debug("Failed to load detection cache: %s", exc)
+        return {}
+
+
+def _save_detection_cache(os_name: str, installed: Dict[str, str]) -> None:
+    try:
+        CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        data = {
+            "os_name": os_name,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "installed": installed,
+        }
+        with open(CACHE_PATH, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+    except Exception as exc:
+        logger.debug("Failed to save detection cache: %s", exc)
+
+
+def _cache_is_valid(cache: Dict[str, Any], os_name: str) -> bool:
+    if cache.get("os_name") != os_name:
+        return False
+    timestamp = cache.get("timestamp")
+    if not isinstance(timestamp, str):
+        return False
+    try:
+        cached_at = datetime.fromisoformat(timestamp)
+        if cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=timezone.utc)
+        return datetime.now(timezone.utc) - cached_at < CACHE_TTL
+    except ValueError:
+        return False
 
 
 def _resolve_path(candidate: str) -> Optional[str]:
@@ -114,8 +161,19 @@ def _resolve_windows_shortcut(link_path: Path) -> Optional[Dict[str, str]]:
         return None
 
 
-def _scan_windows_shortcuts_for_chrome_apps() -> Dict[str, str]:
-    shortcuts: Dict[str, str] = {}
+WINDOWS_SHORTCUT_APP_MAP = {
+    "code.exe": "Visual Studio Code",
+    "discord.exe": "Discord",
+    "slack.exe": "Slack",
+    "spotify.exe": "Spotify",
+    "steam.exe": "Steam",
+    "msedge.exe": "Microsoft Edge",
+    "chrome.exe": "Google Chrome",
+}
+
+
+def _scan_windows_shortcuts() -> Dict[str, Dict[str, str]]:
+    shortcuts: Dict[str, Dict[str, str]] = {}
     if get_os() != "Windows":
         return shortcuts
 
@@ -133,42 +191,29 @@ def _scan_windows_shortcuts_for_chrome_apps() -> Dict[str, str]:
             if not shortcut:
                 continue
 
-            target = shortcut["target"].lower()
-            arguments = shortcut["arguments"].lower()
-            if "chrome.exe" in target and ("--app-id" in arguments or "--app=" in arguments):
-                shortcuts[link_path.stem] = f"{shortcut['target']} {shortcut['arguments']}".strip()
+            shortcuts[link_path.stem] = {
+                "target": shortcut["target"],
+                "arguments": shortcut["arguments"],
+            }
 
     return shortcuts
 
 
-def _search_common_windows_paths(executable_name: str) -> Optional[str]:
-    common_dirs = [
-        Path("C:/Program Files"),
-        Path("C:/Program Files (x86)"),
-        Path.home() / "AppData" / "Local",
-        Path.home() / "AppData" / "Roaming",
-    ]
-    if not executable_name.lower().endswith(".exe"):
-        executable_name = executable_name + ".exe"
+def _resolve_windows_shortcut_app_name(
+    target: str, arguments: str, shortcut_name: str
+) -> Optional[Tuple[str, str]]:
+    target_path = Path(target)
+    app_executable = target_path.name.lower()
 
-    for base_dir in common_dirs:
-        if not base_dir.exists():
-            continue
-        for path in base_dir.rglob(executable_name):
-            if path.is_file():
-                return str(path)
+    if app_executable == "chrome.exe":
+        lower_args = arguments.lower()
+        if "--app-id" in lower_args or "--app=" in lower_args:
+            return shortcut_name, f"{target} {arguments}".strip()
+        return ("Google Chrome", target)
 
-    return None
-
-
-def _search_common_non_windows_paths(executable_name: str) -> Optional[str]:
-    common_dirs = [Path("/usr/bin"), Path("/usr/local/bin"), Path("/snap/bin")]
-    for base_dir in common_dirs:
-        if not base_dir.exists():
-            continue
-        for path in base_dir.rglob(executable_name):
-            if path.is_file():
-                return str(path)
+    mapped_name = WINDOWS_SHORTCUT_APP_MAP.get(app_executable)
+    if mapped_name:
+        return (mapped_name, target)
 
     return None
 
@@ -188,10 +233,7 @@ def _resolve_candidate(candidate: str) -> Optional[str]:
     if location:
         return location
 
-    executable_name = Path(normalized).name
-    if get_os() == "Windows":
-        return _search_common_windows_paths(executable_name)
-    return _search_common_non_windows_paths(executable_name)
+    return None
 
 
 def _resolve_discord() -> Optional[str]:
@@ -214,10 +256,19 @@ def _detect_mac_app(bundle_name: str) -> Optional[str]:
     return None
 
 
-def detect_installed_apps() -> Dict[str, str]:
+def detect_installed_apps(force_refresh: bool = False) -> Dict[str, str]:
     installed: Dict[str, str] = {}
     os_name = get_os()
-    logger.debug("detect_installed_apps called on %s", os_name)
+    logger.debug("detect_installed_apps called on %s (force_refresh=%s)", os_name, force_refresh)
+
+    if not force_refresh:
+        cache = _load_detection_cache()
+        if _cache_is_valid(cache, os_name):
+            installed = cache.get("installed", {})
+            logger.info(
+                "Loaded app detection from cache: %s", list(installed.keys())
+            )
+            return installed
 
     if os_name == "Windows":
         for app_name, candidates in COMMON_WINDOWS_APPS.items():
@@ -230,10 +281,19 @@ def detect_installed_apps() -> Dict[str, str]:
                     installed[app_name] = location
                     break
 
-        chrome_shortcuts = _scan_windows_shortcuts_for_chrome_apps()
-        for shortcut_name, shortcut_target in chrome_shortcuts.items():
-            if shortcut_name not in installed:
-                installed[shortcut_name] = shortcut_target
+        shortcut_entries = _scan_windows_shortcuts()
+        for shortcut_name, shortcut_data in shortcut_entries.items():
+            resolved = _resolve_windows_shortcut_app_name(
+                shortcut_data["target"],
+                shortcut_data["arguments"],
+                shortcut_name,
+            )
+            if not resolved:
+                continue
+
+            app_name, app_path = resolved
+            if app_name not in installed:
+                installed[app_name] = app_path
     elif os_name == "Darwin":
         for app_name, candidates in COMMON_MAC_APPS.items():
             for candidate in candidates:
@@ -249,6 +309,7 @@ def detect_installed_apps() -> Dict[str, str]:
                     installed[app_name] = location
                     break
 
+    _save_detection_cache(os_name, installed)
     logger.info("Apps detectados: %s", list(installed.keys()))
     return installed
 

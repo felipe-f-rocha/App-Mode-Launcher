@@ -37,9 +37,8 @@ class MainWindow(customtkinter.CTk):
         self.workspaces = get_workspaces(self.config_data)
         self.filtered_workspaces: List[Dict[str, Any]] = self.workspaces
         self.os_name = get_os()
-        self.detected_apps = detect_installed_apps()
+        self.detected_apps: Dict[str, str] = {}
         self.analytics = AnalyticsStore.load()
-        self.analytics.track_detection(list(self.detected_apps.keys()))
         self.icons = {
             "coding": load_icon("coding_icon.png"),
             "talking": load_icon("talk_icon.png"),
@@ -51,6 +50,7 @@ class MainWindow(customtkinter.CTk):
 
         self._setup_ui()
         self._apply_startup_behavior()
+        self.after(200, self._start_initial_detection)
 
     def _setup_ui(self):
         self.grid_columnconfigure(0, weight=1)
@@ -357,6 +357,23 @@ class MainWindow(customtkinter.CTk):
             self.workspaces, list(self.detected_apps.keys()), self.analytics
         )
 
+    def _analytics_text(self) -> str:
+        total_launches = self.analytics.get_total_launches()
+        total_detections = self.analytics.get_total_detections()
+        last_workspace = self.analytics.get_last_workspace()
+
+        if total_launches == 0 and total_detections == 0:
+            return "No usage data available yet. Launch workspaces and detect apps to populate analytics."
+
+        details = [
+            f"Total workspace launches: {total_launches}",
+            f"Total app detections: {total_detections}",
+        ]
+        if last_workspace:
+            details.append(f"Last launched workspace: {last_workspace}")
+
+        return " | ".join(details)
+
     def _set_status_message(self, message: str, level: str = "info") -> None:
         color_map = {
             "info": "#7f8c8d",
@@ -393,50 +410,27 @@ class MainWindow(customtkinter.CTk):
             logger.info("Auto-launching workspace: %s", workspace_name)
             self.launch_workspace(preferred)
 
-    def _analytics_text(self) -> str:
-        total_launches = self.analytics.get_total_launches()
-        total_detections = self.analytics.get_total_detections()
-        top_workspace = self.analytics.get_top_workspace()
-        last_workspace = self.analytics.get_last_workspace()
-
-        lines = [
-            f"Total workspace launches: {total_launches}",
-            f"Total app detections: {total_detections}",
-        ]
-
-        if top_workspace:
-            lines.append(f"Most-used workspace: {top_workspace}")
-        if last_workspace:
-            lines.append(f"Last launched workspace: {last_workspace}")
-
-        return "\n".join(lines)
-
-    def refresh_detection(self) -> None:
-        """Detect installed apps with visual feedback and spinner animation."""
-        logger.debug("refresh_detection called")
+    def _run_detection_thread(self, force_refresh: bool = False) -> None:
+        """Run app detection in the background and update the UI."""
+        logger.debug("_run_detection_thread called (force_refresh=%s)", force_refresh)
         self.detect_button.configure(state="disabled")
         self.spinner_index = 0
         self._animate_spinner()
 
         def _detect_in_background() -> None:
             try:
-                self.detected_apps = detect_installed_apps()
+                self.detected_apps = detect_installed_apps(force_refresh=force_refresh)
                 self.analytics.track_detection(list(self.detected_apps.keys()))
                 notify_apps_detected(list(self.detected_apps.keys()))
 
-                self.after(
-                    0, lambda: self.detected_label.configure(text=self._detected_text())
-                )
+                self.after(0, lambda: self.detected_label.configure(text=self._detected_text()))
                 self.after(
                     0,
                     lambda: self.recommendation_label.configure(
                         text=self._recommendation_text()
                     ),
                 )
-                self.after(
-                    0,
-                    lambda: self.analytics_label.configure(text=self._analytics_text()),
-                )
+                self.after(0, lambda: self.analytics_label.configure(text=self._analytics_text()))
                 self.after(
                     0,
                     lambda: self._set_status_message(
@@ -463,6 +457,16 @@ class MainWindow(customtkinter.CTk):
 
         detection_thread = Thread(target=_detect_in_background, daemon=True)
         detection_thread.start()
+
+    def _start_initial_detection(self) -> None:
+        self._set_status_message("Detecting installed apps...", "info")
+        self._run_detection_thread(force_refresh=False)
+
+    def refresh_detection(self) -> None:
+        """Detect installed apps with user-triggered refresh."""
+        logger.debug("refresh_detection called")
+        self._set_status_message("Detecting installed apps...", "info")
+        self._run_detection_thread(force_refresh=True)
 
     def launch_workspace(self, workspace: Dict[str, Any]) -> None:
         """Launch workspace with contextual feedback."""

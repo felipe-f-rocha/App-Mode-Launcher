@@ -1,0 +1,9 @@
+{
+  "os_name": "Windows",
+  "timestamp": "2026-06-04T15:37:41.005100+00:00",
+  "installed": {
+    "Google Chrome": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "Microsoft Edge": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    "Visual Studio Code": "C:\\Users\\felip\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+  }
+}

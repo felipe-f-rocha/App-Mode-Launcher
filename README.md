@@ -16,12 +16,7 @@ It instantly launches personalized app groups, workflows, and recommended worksp
 
 ## Demo
 
-![Demo placeholder](assets/placeholder-demo.gif)
-
-- **Short demo placeholder** for theme switching, workspace launch, and app detection.
-- Replace with actual GIFs or screen recordings for a stronger presentation.
-
----
+![DEMO](assets/demo.gif)
 
 ## What it does
 
@@ -134,9 +129,7 @@ python main.py
 
 ## Screenshots
 
-![Placeholder screenshot](assets/placeholder-screenshot.png)
-
-> Use real screenshots of dark mode, workspace cards, detection results, and recommendations here.
+![Placeholder screenshot](assets/screenshot.png)
 
 ---
 
