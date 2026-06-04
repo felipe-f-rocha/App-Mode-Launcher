@@ -1,0 +1,123 @@
+<svg viewBox="0 0 500 500" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Soft Neon Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12.857142857142858" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Visual Gradients mapping color themes -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c0c0e" />
+      <stop offset="100%" stop-color="#1e1e24" />
+    </linearGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+
+    <linearGradient id="tertiaryGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- macOS Gloss Glaze Overlay Gradient -->
+    <linearGradient id="glazeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0.03" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ground Shadow under squircle -->
+  <path d="M 250,22 C 385,22 485,122 485,257 C 485,392 385,492 250,492 C 115,492 15,392 15,257 C 15,122 115,22 250,22 Z" fill="rgba(0,0,0,0.35)" filter="blur(16px)" />
+
+  <!-- App SQUIRCLE background -->
+  
+  <path d="M 250,25 L 445,137.5 L 445,362.5 L 250,475 L 55,362.5 L 55,137.5 Z" fill="url(#bgGrad)" stroke="#334155" stroke-width="4" />
+  
+  <!-- Grid Dot Matrices -->
+  <g opacity="0.12" fill="#ffffff">
+    <circle cx="70" cy="205" r="2.5" />
+    <circle cx="70" cy="250" r="2.5" />
+    <circle cx="70" cy="295" r="2.5" />
+    <circle cx="115" cy="115" r="2.5" />
+    <circle cx="115" cy="160" r="2.5" />
+    <circle cx="115" cy="205" r="2.5" />
+    <circle cx="115" cy="250" r="2.5" />
+    <circle cx="115" cy="295" r="2.5" />
+    <circle cx="115" cy="340" r="2.5" />
+    <circle cx="115" cy="385" r="2.5" />
+    <circle cx="160" cy="115" r="2.5" />
+    <circle cx="160" cy="160" r="2.5" />
+    <circle cx="160" cy="205" r="2.5" />
+    <circle cx="160" cy="250" r="2.5" />
+    <circle cx="160" cy="295" r="2.5" />
+    <circle cx="160" cy="340" r="2.5" />
+    <circle cx="160" cy="385" r="2.5" />
+    <circle cx="205" cy="70" r="2.5" />
+    <circle cx="205" cy="115" r="2.5" />
+    <circle cx="205" cy="160" r="2.5" />
+    <circle cx="205" cy="205" r="2.5" />
+    <circle cx="205" cy="250" r="2.5" />
+    <circle cx="205" cy="295" r="2.5" />
+    <circle cx="205" cy="340" r="2.5" />
+    <circle cx="205" cy="385" r="2.5" />
+    <circle cx="205" cy="430" r="2.5" />
+    <circle cx="250" cy="70" r="2.5" />
+    <circle cx="250" cy="115" r="2.5" />
+    <circle cx="250" cy="160" r="2.5" />
+    <circle cx="250" cy="205" r="2.5" />
+    <circle cx="250" cy="250" r="2.5" />
+    <circle cx="250" cy="295" r="2.5" />
+    <circle cx="250" cy="340" r="2.5" />
+    <circle cx="250" cy="385" r="2.5" />
+    <circle cx="250" cy="430" r="2.5" />
+    <circle cx="295" cy="70" r="2.5" />
+    <circle cx="295" cy="115" r="2.5" />
+    <circle cx="295" cy="160" r="2.5" />
+    <circle cx="295" cy="205" r="2.5" />
+    <circle cx="295" cy="250" r="2.5" />
+    <circle cx="295" cy="295" r="2.5" />
+    <circle cx="295" cy="340" r="2.5" />
+    <circle cx="295" cy="385" r="2.5" />
+    <circle cx="295" cy="430" r="2.5" />
+    <circle cx="340" cy="115" r="2.5" />
+    <circle cx="340" cy="160" r="2.5" />
+    <circle cx="340" cy="205" r="2.5" />
+    <circle cx="340" cy="250" r="2.5" />
+    <circle cx="340" cy="295" r="2.5" />
+    <circle cx="340" cy="340" r="2.5" />
+    <circle cx="340" cy="385" r="2.5" />
+    <circle cx="385" cy="115" r="2.5" />
+    <circle cx="385" cy="160" r="2.5" />
+    <circle cx="385" cy="205" r="2.5" />
+    <circle cx="385" cy="250" r="2.5" />
+    <circle cx="385" cy="295" r="2.5" />
+    <circle cx="385" cy="340" r="2.5" />
+    <circle cx="385" cy="385" r="2.5" />
+    <circle cx="430" cy="205" r="2.5" />
+    <circle cx="430" cy="250" r="2.5" />
+    <circle cx="430" cy="295" r="2.5" />
+  </g>
+
+  <!-- Core Motif Rotated and Transposed -->
+  <g transform="translate(250, 250) rotate(0) scale(1) translate(-250, -250)">
+    <!-- Core Symbol: Portal Launch -->
+    <polygon points="250,110 370,180 370,320 250,390 130,320 130,180" fill="none" stroke="url(#tertiaryGrad)" stroke-width="8.399999999999999" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60, 20, 140, 40" opacity="0.8" />
+    <circle cx="250" cy="250" r="110" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="10, 15, 60, 20" opacity="0.4" />
+    <path d="M 180,240 L 255,240 L 225,290 L 330,225 L 245,225 L 275,175 Z" fill="url(#accentGrad)" stroke="#ffffff" stroke-width="2" filter="url(#glow)" />
+    <line x1="350" y1="210" x2="390" y2="185" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" opacity="0.7" />
+    <line x1="110" y1="290" x2="150" y2="265" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" opacity="0.5" />
+  </g>
+
+  <!-- MacOS Glass Gloss Glaze Overlay to emulate a real desktop app style -->
+  <path d="M 15,250 C 15,115 115,15 250,15 C 385,15 485,115 485,250 Z" fill="url(#glazeGrad)" pointer-events="none" />
+  
+  <!-- Subtle top rim border highlight for a premium glazed rim -->
+  <path d="M 250,16 C 385,16 484,115 484,250" fill="none" stroke="rgba(255, 255, 255, 0.28)" stroke-width="2" stroke-linecap="round" pointer-events="none" />
+</svg>

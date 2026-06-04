@@ -1,0 +1,18 @@
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+  \..*|
+  \.__pycache__|
+  \.venv|
+  build|
+  dist
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I", "C", "B", "UP", "S"]
+exclude = [".venv", "__pycache__"]

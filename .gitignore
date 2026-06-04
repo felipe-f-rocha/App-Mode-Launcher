@@ -1,8 +1,26 @@
-# Ambiente virtual
+# Virtual environment
 /.venv
-.idea
 
-# Cache e logs
+# Editor and IDE
+/.idea
+/.vscode
+
+# Cache and logs
 __pycache__/
+**/__pycache__/
 *.pyc
+*.pyo
+*.pyd
 *.log
+/app/logs/
+
+# Pytest cache
+.pytest_cache/
+
+# System and temp files
+.DS_Store
+*.swp
+*~
+
+# Local analytics and runtime data
+app/config/analytics.json

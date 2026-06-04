@@ -1,157 +1,153 @@
 # App Mode Launcher
 
-Aplicação desktop em Python com **CustomTkinter** que permite abrir rapidamente conjuntos de aplicativos com base no modo de trabalho escolhido: **Coding**, **Talking** ou **Designing**.
+![App Mode Launcher Banner](assets/app-mode-launcher-banner.svg)
 
-> ⚠️ **Importante**  
-> Os caminhos dos aplicativos (**paths**) e o **AUMID** **não vêm configurados propositalmente**.  
-> Cada usuário deve adicionar manualmente **seus próprios valores** no código e no `config.json`.
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](#)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet.svg)](#)
 
----
+## Launch smarter. Focus faster.
 
-## 📋 Tabela de Conteúdos
-
-- [Visão Geral](#-visão-geral)
-- [Funcionalidades](#-funcionalidades)
-- [Pré-requisitos](#-pré-requisitos)
-- [Instalação](#-instalação)
-- [Configuração Manual](#-configuração-manual)
-- [Uso](#-uso)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Dependências](#-dependências)
-- [Observações Importantes](#-observações-importantes)
-- [Licença](#-licença)
+**App Mode Launcher** is an intelligent desktop workspace manager for developers, students, and gamers.
+It instantly launches personalized app groups, workflows, and recommended workspaces in a single click.
 
 ---
 
-## 📖 Visão Geral
+## Demo
 
-O **App Mode Launcher** é uma interface gráfica simples que permite ao usuário escolher um modo de trabalho. Ao selecionar um modo, a aplicação abre automaticamente os aplicativos configurados pelo próprio usuário e encerra a interface.
+![Demo placeholder](assets/placeholder-demo.gif)
 
-O projeto foi desenvolvido para ser **totalmente personalizável**, evitando configurações fixas que só funcionariam em uma máquina específica.
-
----
-
-## ✨ Funcionalidades
-
-- Interface gráfica moderna com **CustomTkinter**
-- Modos disponíveis:
-  - **Coding** – aplicativos de programação
-  - **Talking** – aplicativos de conversa
-  - **Designing** – aplicativos de design
-- Ícones personalizados
-- Alternância entre **tema claro** e **tema escuro**
-- Configuração manual simples
+- **Short demo placeholder** for theme switching, workspace launch, and app detection.
+- Replace with actual GIFs or screen recordings for a stronger presentation.
 
 ---
 
-## 🧰 Pré-requisitos
+## What it does
 
-- Python **3.10 ou superior**
-- Sistema operacional **Windows**
-- Pip atualizado
+App Mode Launcher is a productivity-focused desktop application that helps users instantly launch personalized workspaces, apps, and workflows.
+
+- Intelligent workspace system powered by local analytics.
+- Cross-platform app detection and recommendation suggestions.
+- Persistent theme and startup configuration.
+- Simple JSON-based workspace authoring.
 
 ---
 
-## ⚙️ Instalação
+## Features
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/felipe-f-rocha/app-mode-launcher.git
-   cd app-mode-launcher
-   
-2. (Opcional) Crie um ambiente virtual:
-    ```bash
-    python -m venv venv
-    venv\Scripts\activate
-   
-3. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
+- Intelligent workspace system
+- Cross-platform app detection
+- Persistent themes and startup presets
+- Workspace recommendations
+- CustomTkinter modern UI
+- Dynamic workspace loading from JSON
+- Local analytics with zero-state persistence
+- Plugin hooks and modular extension support
+- Logging system for traceability
+- Automated tests and type-safe Python code
 
-## 🔧 Configuração Manual
+---
 
-### 1️⃣ Arquivo `config.json`
+## Before vs After
 
-O usuário deve definir manualmente quais aplicativos serão abertos nos modos **Coding** e **Designing**.
+| Before | After |
+|---|---|
+| Monolithic utility | Modular architecture |
+| Basic single-launch launcher | Intelligent workspace manager |
+| No persistence | Persistent configuration |
+| No workspace intelligence | Analytics-driven recommendations |
+| Limited UX | Modern CustomTkinter UI |
+| No plugin extension | Plugin system for custom workspaces |
+| No dedicated docs | Product-ready README + roadmap |
 
-```json
-{
-  "apps": {
-    "coding": [
-      "CAMINHO_OU_COMANDO_DO_SEU_APP"
-    ],
-    "designing": [
-      "CAMINHO_OU_COMANDO_DO_SEU_APP"
-    ]
-  }
-}
+---
+
+## How GitHub Copilot Helped
+
+- Assisted modular refactoring to organize `app/core`, `app/ui`, `app/plugins`, and `app/tests`
+- Helped structure the logging and analytics subsystems
+- Accelerated UI improvements and status feedback design
+- Suggested type hints, validation, and safer config handling
+- Improved productivity during debugging and README refresh
+
+---
+
+## Architecture
+
+```
+app/
+├── core/            # Business logic and analytics
+├── ui/              # CustomTkinter interface components
+├── config/          # Persistent JSON settings and runtime analytics
+├── plugins/         # Plugin discovery and hook integration
+└── tests/           # Automated pytest coverage
 ```
 
-💡 **Os valores podem ser:**
-
-- **Caminhos completos**  
-  `C:\\Program Files\\...`
-
-- **Comandos disponíveis no PATH**  
-  Ex.: `code`, `cmd`
+This architecture keeps the launcher modular, testable, and ready for extension.
 
 ---
 
-### 2️⃣ Configuração do AUMID (Modo Talking)
-
-No arquivo principal (`app.py`), substitua manualmente o valor da variável `aumid`:
-
-```python
-aumid = "COLOQUE_AQUI_O_AUMID_DO_SEU_APP_DE_CONVERSA"
-```
-Esse passo é necessário para aplicativos instalados via **Microsoft Store** (ex.: WhatsApp).
-
----
-## ▶️ Uso
-
-Execute o aplicativo com:
+## Installation
 
 ```bash
-python app.py
+git clone https://github.com/felipe-f-rocha/app-mode-launcher.git
+cd app-mode-launcher
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
 
-1. Escolha o modo desejado  
-2. Os aplicativos configurados serão abertos  
-3. A aplicação será encerrada automaticamente  
+On Windows:
 
-Use o switch **“Mudar Tema”** para alternar entre claro e escuro.
-
----
-## 📁 Estrutura do Projeto
-
-```arduíno
-├── assets/
-│ ├── coding_icon.png
-│ ├── talk_icon.png
-│ └── design_icon.png
-├── config.json
-├── app.py
-├── requirements.txt
-└── README.md
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
 ```
 
 ---
 
-## 📦 Dependências
+## Technologies
 
-Conteúdo sugerido para `requirements.txt`:
-```txt
-customtkinter
-pillow
-```
----
-## ⚠️ Observações Importantes
-- O projeto não funciona imediatamente após o clone
-- Cada usuário deve configurar:
-  - Paths ou comandos dos aplicativos   
-  - AUMID do aplicativo de conversa
-- Isso é intencional para garantir compatibilidade com qualquer máquina
----
-## 📄 Licença
+- Python 3.12
+- CustomTkinter
+- Pillow
+- JSON configuration
+- Pytest
+- Logging
+- GitHub Copilot
 
-Este projeto está sob a licença MIT.
+---
+
+## Roadmap
+
+- Plugin system and third-party workspace extensions
+- AI-powered recommendations
+- Cloud sync for workspace settings
+- Analytics dashboard
+- Workspace sharing and templates
+
+---
+
+## Screenshots
+
+![Placeholder screenshot](assets/placeholder-screenshot.png)
+
+> Use real screenshots of dark mode, workspace cards, detection results, and recommendations here.
+
+---
+
+## Final Vision
+
+From a simple launcher utility to an intelligent productivity workspace manager.
+
+App Mode Launcher is designed to feel polished, fast, and modern while keeping configuration simple and extensible.
+
+---
+
+## License
+
+MIT License

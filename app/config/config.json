@@ -1,0 +1,48 @@
+{
+  "settings": {
+    "theme": "dark",
+    "startup": {
+      "auto_launch": false,
+      "workspace_name": "",
+      "resume_last_workspace": false,
+      "last_workspace": "Coding"
+    }
+  },
+  "apps": {
+    "coding": [
+      "YOUR_CODING_APP_PATH_OR_COMMAND",
+      "code"
+    ],
+    "designing": [
+      "YOUR_DESIGN_APP_PATH_OR_COMMAND",
+      "code"
+    ],
+    "talking": {
+      "aumid": "PUT_YOUR_TALKING_APP_AUMID_HERE"
+    }
+  },
+  "workspaces": [
+    {
+      "name": "Coding",
+      "type": "apps",
+      "apps": [
+        "code"
+      ],
+      "description": "Launches the development workspace with your editor."
+    },
+    {
+      "name": "Designing",
+      "type": "apps",
+      "apps": [
+        "YOUR_DESIGN_APP_PATH_OR_COMMAND"
+      ],
+      "description": "Launches your design tools workspace."
+    },
+    {
+      "name": "Talking",
+      "type": "talking",
+      "aumid": "PUT_YOUR_TALKING_APP_AUMID_HERE",
+      "description": "Launches the talking app using AUMID from the Microsoft Store."
+    }
+  ]
+}
